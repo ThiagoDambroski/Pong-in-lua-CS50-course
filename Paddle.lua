@@ -16,10 +16,8 @@ end
 
 function Paddle:update(dt)
     if love.keyboard.isDown(self.keyDown) then
-       -- self.moveUp(dt)
        self.y = math.min(VIRTUAL_HEIGHT -20,self.y + PADDLE_SPEED * dt)
     elseif love.keyboard.isDown(self.keyUp) then
-       -- self.moveDown(dt)
        self.y = math.max(0, self.y + -PADDLE_SPEED * dt)
     end
 end
