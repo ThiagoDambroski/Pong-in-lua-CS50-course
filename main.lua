@@ -25,6 +25,8 @@ function love.load()
     newFont = love.graphics.newFont('font.ttf',8)
 
     love.graphics.setFont(newFont)
+    
+    fontGameWinner = love.graphics.newFont('font.ttf',16)
 
     newFontBigger = love.graphics.newFont('font.ttf',32) 
 
@@ -91,21 +93,39 @@ function love.update(dt)
             ball.dy = -ball.dy
         end
 
+        if ball.x < 0 then
+            servingPlayer = 1
+            player2Score = player2Score + 1
+            if player2Score == 10 then
+                winningPlayer = 2
+                gameState = 'over'
+            
+            else
+                gameState = 'serve'
+                ball:reset()
+            end
+            
+            
+        end
+    
+        if ball.x > VIRTUAL_WIDTH then
+            servingPlayer = 2
+            player1Score = player1Score + 1
+            if player1Score == 10 then
+                winningPlayer = 1
+                gameState = 'over'
+            else
+                gameState = 'serve'
+                ball:reset()
+            end
+            
+            
+            
+        end
+
      end
     
-     if ball.x < 0 then
-        servingPlayer = 1
-        player2Score = player2Score + 1
-        ball:reset()
-        gameState = 'serve'
-    end
-
-    if ball.x > VIRTUAL_WIDTH then
-        servingPlayer = 2
-        player1Score = player1Score + 1
-        ball:reset()
-        gameState = 'serve'
-    end
+    
 
     if gameState == 'play' then
         ball:update(dt)
@@ -130,9 +150,23 @@ function love.keypressed(key)
 
     elseif key == 'enter' or key == 'return' then
         if gameState == 'start' then
-            gameState = 'serve'
+            gameState = 'play'
         elseif gameState == 'serve' then
             gameState = 'play'
+        elseif gameState == 'over' then
+            gameState = 'serve'
+
+            ball:reset()
+
+            player1Score = 0
+            player2Score = 0
+
+            if winningPlayer == 1 then
+                servingPlayer = 2
+            else 
+                servingPlayer = 1
+            end
+
 
         end
     end
@@ -159,6 +193,13 @@ function love.draw()
         love.graphics.printf('Press Enter to serve!', 0, 20, VIRTUAL_WIDTH, 'center')
     elseif gameState == 'play' then
         -- no UI messages to display in play
+    elseif gameState == 'over' then
+        love.graphics.setFont(fontGameWinner)
+        love.graphics.printf('player'.. tostring(winningPlayer) .. " is the winner",0,10, VIRTUAL_WIDTH,'center')
+        love.graphics.setFont(newFont)
+        love.graphics.printf("press enter to restart the game", 0, 30, VIRTUAL_WIDTH, 'center')
+
+
     end
 
     love.graphics.setFont(newFontBigger)
