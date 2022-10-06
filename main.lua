@@ -4,6 +4,7 @@ Class = require 'class'
 
 require 'Paddle'
 require 'Ball'
+require 'Power'
 
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720 
@@ -48,6 +49,9 @@ function love.load()
     player2 = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT - 30,5,20,'up','down')
 
     ball = Ball(VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4)
+
+    power = Power(player1,player2)
+   
     
 
     gameState = 'start'
@@ -157,6 +161,8 @@ function love.update(dt)
 --- player 2
     player2:update(dt)
 
+    power:update(dt)
+
    
 
 end
@@ -173,6 +179,7 @@ function love.keypressed(key)
             gameState = 'play'
         elseif gameState == 'serve' then
             gameState = 'play'
+            power:chance_of_appering()
         elseif gameState == 'over' then
             gameState = 'serve'
 
@@ -207,10 +214,14 @@ function love.draw()
         love.graphics.printf('Welcome to Pong!', 0, 10, VIRTUAL_WIDTH, 'center')
         love.graphics.printf('Press Enter to begin!', 0, 20, VIRTUAL_WIDTH, 'center')
     elseif gameState == 'serve' then
+        
+
         love.graphics.setFont(newFont)
         love.graphics.printf('Player ' .. tostring(servingPlayer) .. "'s serve!", 
             0, 10, VIRTUAL_WIDTH, 'center')
         love.graphics.printf('Press Enter to serve!', 0, 20, VIRTUAL_WIDTH, 'center')
+
+
     elseif gameState == 'play' then
         -- no UI messages to display in play
     elseif gameState == 'over' then
@@ -226,7 +237,7 @@ function love.draw()
     love.graphics.print(tostring(player1Score), VIRTUAL_WIDTH / 2 - 50, VIRTUAL_HEIGHT / 3)
     love.graphics.print(tostring(player2Score),VIRTUAL_WIDTH / 2 + 30, VIRTUAL_HEIGHT / 3)
 
-    
+     
 ---left
    player1:render()
 
@@ -235,6 +246,8 @@ function love.draw()
 
 ---ball
     ball:render()
+
+    power:render()
 
     displayFPS()
 
