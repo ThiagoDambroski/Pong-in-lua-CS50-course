@@ -21,7 +21,7 @@ function Ball:collides(paddle)
     if self.y > paddle.y + paddle.height or paddle.y > self.y + self.height then
         return false
     end
-
+    
     return true
     
 end

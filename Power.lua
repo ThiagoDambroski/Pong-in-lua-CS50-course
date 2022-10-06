@@ -1,13 +1,14 @@
 Power =  Class{}
 
 function Power:init(player1,player2)
-    self.x1 = player1.x
-    self.x2 = player2.x
+    self.player1 = player1
+    self.player2 = player2
+    self.x = 0
     self.widht = 3
     self.height = 3
     self.can_apper = false
     self.lucky_player = 0
-    self.random_number = math.random(0,100)
+    self.y = math.random(0,100)
     self.frame = 0
 
     
@@ -15,15 +16,19 @@ end
 
 
 function Power:chance_of_appering()
+    self.compartive_number = 0
     self.number = math.random(1,200)
+    self.compartive_number = math.random(1,100)
     self.chance = 15
     if self.number > 100 then
        self.lucky_player = 2
+       self.x = self.player2.x
        self.number = self.number - 100
     else
         self.lucky_player = 1
+        self.x = self.player1.x
    end
-        
+    
   if self.chance >= self.compartive_number then
         self.can_apper = true
   else
@@ -33,8 +38,23 @@ function Power:chance_of_appering()
     
 end
 
+function Power:collides(paddle)
+    if self.can_apper then
+        if self.y > paddle.y + paddle.height or paddle.y > self.y + self.height then
+            return false
+           else 
+            return true
+           end
+    end
+   
+        
+end
+
+
+
+
 function Power:update(dt)
-    self.compartive_number = math.random(1,100)
+    
    if self.can_apper then
         self.frame = self.frame + 1
        self.seconds = self.frame/60 
@@ -49,13 +69,10 @@ end
 function Power:render()
     
     if self.can_apper then
-        if self.lucky_player == 1 then
+       
         love.graphics.setColor(255,0,0)
-        love.graphics.rectangle('fill',self.x1,self.random_number,3,3)
-        else
-            love.graphics.setColor(255,0,0)
-            love.graphics.rectangle('fill',self.x2,self.random_number,3,3)
-        end
+        love.graphics.rectangle('fill',self.x,self.y,3,3)
+        
     end
     
     

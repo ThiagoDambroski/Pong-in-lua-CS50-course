@@ -45,6 +45,7 @@ function love.load()
     player2Score = 0
 
     player1 = Paddle(10,30,5,20,'w','s')
+    
 
     player2 = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT - 30,5,20,'up','down')
 
@@ -75,10 +76,31 @@ function love.update(dt)
 
     elseif gameState == 'play' then
 
+        if power:collides(player1) then
+    
+            player1.powerful = true
+            power.can_apper = false
+            
+        end
+
+        if power:collides(player2) then
+    
+            player2.powerful = true
+            power.can_apper = false
+            
+        end
+
 
         if ball:collides(player1) then
-            ball.dx = -ball.dx * 1.03
-            ball.x = player1.x + 5
+            if player1.powerful then
+                ball.dx = -ball.dx * 2.03
+                ball.x = player1.x + 5
+                player1.powerful = false
+            else  
+                ball.dx = -ball.dx * 1.03
+                ball.x = player1.x + 5
+    
+            end
 
             if ball.dy < 0 then
                 ball.dy = -math.random(10, 150)
@@ -91,8 +113,16 @@ function love.update(dt)
 
 
         if ball:collides(player2) then
-            ball.dx = -ball.dx * 1.03
-            ball.x = player2.x -4 
+
+            if player2.powerful then
+                ball.dx = -ball.dx * 2.03
+                ball.x = player2.x - 4
+                player2.powerful = false
+            else  
+                ball.dx = -ball.dx * 1.03
+                ball.x = player2.x - 4
+    
+            end
             
             if ball.dy < 0 then
                 ball.dy = -math.random(10, 150)
@@ -180,6 +210,8 @@ function love.keypressed(key)
         elseif gameState == 'serve' then
             gameState = 'play'
             power:chance_of_appering()
+            player1.powerful = false
+            player2.powerful = false
         elseif gameState == 'over' then
             gameState = 'serve'
 

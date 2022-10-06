@@ -8,6 +8,7 @@ function Paddle:init(x,y,width,height,keyUp,keyDown)
     self.height = height
     self.keyUp = keyUp
     self.keyDown = keyDown
+    self.powerful = false
     
 end
 
@@ -23,6 +24,12 @@ function Paddle:update(dt)
 end
 
 function Paddle:render()
-    love.graphics.rectangle('fill', self.x, self.y, self.width, self.height)
-    
+    if self.powerful == true then
+        love.graphics.setColor(255,0,0)
+        love.graphics.rectangle('fill', self.x, self.y, self.width, self.height)
+        love.graphics.setColor(255,255,255)
+    else
+        love.graphics.setColor(255,255,255)
+        love.graphics.rectangle('fill', self.x, self.y, self.width, self.height)
+    end
 end
